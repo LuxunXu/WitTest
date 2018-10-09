@@ -20,18 +20,45 @@ public class WitTest {
 
     public static void main(String[] args) throws IOException {
         //checkStatus("QHP5YXMFATLYE2EGODMPMWU6ZWO5VI6L");
-        checkStatus("RPZNVAHWSH7KRSJWZ4IDC6BLAWRYZX73");
+        checkMessage("TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP", "Are there income guidelines?");
+        checkMessage("GV2XNT54SLTGSZQHG5WZOEH4ODEGIPG4", "Are there income guidelines to receive the meals?");
+        //checkStatus("TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP");
         //newApp("testApp");
-        //addEntity("farmers_market_vouchersQuestion", "RPZNVAHWSH7KRSJWZ4IDC6BLAWRYZX73");
-        //trainTopicEntity("topic", "Commodity_Boxes", "Commodity_Boxes", "RPZNVAHWSH7KRSJWZ4IDC6BLAWRYZX73");
-        //addWitValue("farmers_market_vouchersQuestion", "sfmnpwhenProgram", "RPZNVAHWSH7KRSJWZ4IDC6BLAWRYZX73");
-        //addWitExpression("farmers_market_vouchersQuestion", "When is the program","sfmnpwhenProgram", "RPZNVAHWSH7KRSJWZ4IDC6BLAWRYZX73");
+        //addEntity("mealQuestion", "TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP");
+        //trainTopicEntity("topic", "Commodity_Boxes", "Commodity_Boxes", "TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP");
+        //addWitValue("mealQuestion", "incomeGuidelineMeal", "TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP");
+        //addWitExpression("farmers_market_vouchersQuestion", "Are there income guidelines","incomeGuideline", "TOQBHMSB4YPTIU7LZUBE2KCSH5ZRISEP");
 
     }
 
     private static void checkStatus(String token) {
         try {
             URL myURL = new URL("https://api.wit.ai/samples?limit=1000");
+            URLConnection conn = myURL.openConnection();
+            conn.setRequestProperty("Authorization", "Bearer " + token); // QHP5YXMFATLYE2EGODMPMWU6ZWO5VI6L for CICOA
+            conn.connect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    conn.getInputStream(), "UTF-8"));
+            String inputLine;
+            String output = "";
+            while ((inputLine = in.readLine()) != null) {
+                output += inputLine + "\n";
+            }
+            in.close();
+            System.out.println(output);
+        } catch (MalformedURLException e) {
+            // new URL() failed
+            // ...
+        } catch (IOException e) {
+            // openConnection() failed
+            // ...
+        }
+    }
+
+    private static void checkMessage(String token, String message) {
+        message = message.replaceAll(" ", "%20");
+        try {
+            URL myURL = new URL("https://api.wit.ai/message?v=20170307&q=" + message);
             URLConnection conn = myURL.openConnection();
             conn.setRequestProperty("Authorization", "Bearer " + token); // QHP5YXMFATLYE2EGODMPMWU6ZWO5VI6L for CICOA
             conn.connect();
